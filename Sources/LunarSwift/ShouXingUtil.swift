@@ -2,6 +2,14 @@ import Foundation
 
 public class ShouXingUtil {
 
+    struct ELon: Hashable {
+        let pt: Double
+        let n: Int
+    }
+    private static var eLonCaches: [ELon: Double] = [:]
+    private static var shuoCaches: [Double: Double] = [:]
+    private static var qiAccurate2Caches: [Double: Double] = [:]
+
     public static var PI_2: Double = Double(2) * Double.pi
     public static var ONE_THIRD: Double = Double(1) / Double(3)
     public static var SECOND_PER_DAY: Int = 86400
@@ -329,8 +337,15 @@ public class ShouXingUtil {
     }
 
     public class func eLon(pt: Double, n: Int) -> Double {
+        let eLon = ELon(pt: pt, n: n)
+        if let finded = eLonCaches[eLon] {
+            return finded
+        }
         let t: Double = pt / Double(10)
         var v: Double = 0
+        defer {
+            eLonCaches[eLon] = v
+        }
         var tn: Double = 1
         let pn: Int = 1
         let m0: Double = XL0[pn + 1] - XL0[pn]
@@ -550,8 +565,14 @@ public class ShouXingUtil {
     }
 
     public class func calcShuo(pjd: Double) -> Double {
+        if let finded = shuoCaches[pjd] {
+            return finded
+        }
         let size: Int = SHUO_KB.count
         var d: Double = 0
+        defer {
+            shuoCaches[pjd] = d
+        }
         let pc: Double = 14
         let jd: Double = pjd + Solar.J2000
         let f1: Double = SHUO_KB[0] - pc
@@ -629,14 +650,20 @@ public class ShouXingUtil {
     }
     
     public class func qiAccurate2(jd: Double) -> Double {
+        if let finded = qiAccurate2Caches[jd] {
+            return finded
+        }
         let d: Double = Double.pi / 12
         let w: Double = floor((jd + 293) / 365.2422 * 24) * d
-        let a: Double = qiAccurate(w: w)
+        var a: Double = qiAccurate(w: w)
+        defer {
+            qiAccurate2Caches[jd] = a
+        }
         if a - jd > 5 {
-            return qiAccurate(w: w - d)
+            a = qiAccurate(w: w - d)
         }
         if a - jd < -5 {
-            return qiAccurate(w: w + d)
+            a = qiAccurate(w: w + d)
         }
         return a
     }
