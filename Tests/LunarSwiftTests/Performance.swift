@@ -32,7 +32,7 @@ final class Performance: XCTestCase {
 
             for _ in 0..<1000 {
                 // 6s
-//                let _ = Lunar.fromDate(date: Date())
+                let _ = Lunar.fromDate(date: Date())
 
                 // 0.328s
 //                let _ = Solar.fromDate(date: Date())
@@ -41,7 +41,7 @@ final class Performance: XCTestCase {
 //                let _ = LunarYear(lunarYear: 2024)
 
                 // 3s
-                let _ = Lunar(lunarYear: 2024, lunarMonth: 7, lunarDay: 11, hour: 17, minute: 38, second: 0)
+//                let _ = Lunar(lunarYear: 2024, lunarMonth: 7, lunarDay: 11, hour: 17, minute: 38, second: 0)
             }
         }
     }
